@@ -1,0 +1,40 @@
+#spring.profiles.active=dev
+
+logging:
+  level:
+    com:
+      journal:
+        journalApp: DEBUG
+
+spring:
+  application:
+    name: journalApp
+  data:
+    mongodb:
+      uri: mongodb+srv://garvroc9_db_user:3i5r9HR502WbSVT3@cluster0.xweqsf8.mongodb.net/?appName=Cluster0
+      database: journaldb
+      mongodb:
+        auto-index-creation: true
+  main:
+    allow-circular-references: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: garvroc9@gmail.com
+    password: lhqp ryie pspx qmmh
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+server:
+  port: 8080
+weather:
+  api:
+    key: 38d81855b0adadf230afa26b9f31aedb
+
+
+
+
