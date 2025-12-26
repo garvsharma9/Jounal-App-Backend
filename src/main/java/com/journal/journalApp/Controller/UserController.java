@@ -1,5 +1,6 @@
 package com.journal.journalApp.Controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.journal.journalApp.Entity.User;
 import com.journal.journalApp.Repository.UserRepository;
 import com.journal.journalApp.Services.UserService;
@@ -56,8 +57,7 @@ public class UserController {
     }
 
     @GetMapping("/greeting")
-    public ResponseEntity<?> gretting()
-    {
+    public ResponseEntity<?> gretting() throws JsonProcessingException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         WeatherResponse weatherResponse = weatherService.getWeather("Mumbai");

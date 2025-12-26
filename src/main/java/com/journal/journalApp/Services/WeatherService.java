@@ -1,5 +1,6 @@
 package com.journal.journalApp.Services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.journal.journalApp.api.response.WeatherResponse;
 import com.journal.journalApp.cache.AppCache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +23,29 @@ public class WeatherService {
     private AppCache appCache;
     @Autowired
     private RestTemplate restTemplate ;
+    @Autowired
+    private RedisService redisService;
 
+    public WeatherResponse getWeather(String city) throws JsonProcessingException {
 
-    public WeatherResponse getWeather(String city){
-        String finalApi=appCache.APP_CACHE.get("weather_api").replace("<city>", city).replace("<apiKey>", apiKey);
+        WeatherResponse weatherResponse = redisService.get("Weather_of_" + city, WeatherResponse.class);
+        if(weatherResponse!=null)
+        {
+            return weatherResponse;
+        }
+        else {
+            String finalApi=appCache.APP_CACHE.get("weather_api").replace("<city>", city).replace("<apiKey>", apiKey);
 
-        System.out.println(finalApi);
-//        String finalApi="http://api.weatherstack.com/current?access_key=38d81855b0adadf230afa26b9f31aedb&query=CITYhttp://api.weatherstack.com/current?access_key=API_KEY&query=Mumbai";
-        ResponseEntity<WeatherResponse> response = restTemplate.exchange(finalApi, HttpMethod.GET, null, WeatherResponse.class);
+            System.out.println(finalApi);
+            ResponseEntity<WeatherResponse> response = restTemplate.exchange(finalApi, HttpMethod.GET, null, WeatherResponse.class);
 
-        WeatherResponse body = response.getBody();
-        return body;
+            WeatherResponse body = response.getBody();
+            if(body!=null)
+            {
+                redisService.set("Weather_of_" + city, body, 300l );
+            }
+            return body;
+        }
+
     }
 }
